@@ -2,7 +2,6 @@
 *.class
 .gradle
 .idea
-build
 
 
 # Log file
