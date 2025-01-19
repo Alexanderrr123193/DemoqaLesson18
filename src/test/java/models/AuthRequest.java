@@ -1,10 +1,10 @@
 package models;
 
-public class GenerateTokenLoginRequestModel {
+public class AuthRequest {
     private String userName;
     private String password;
 
-    // Геттеры и сеттеры
+    // Getters and setters
     public String getUserName() {
         return userName;
     }
