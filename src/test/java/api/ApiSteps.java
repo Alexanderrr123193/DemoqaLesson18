@@ -19,7 +19,7 @@ public class ApiSteps {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Step("Авторизация с использованием имени пользователя {userName} и пароля {password}")
+    @Step("Авторизация с использованием имени пользователя {userName}")
     public static Response authenticate(String userName, String password) throws JsonProcessingException {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setUserName(userName);
@@ -31,14 +31,14 @@ public class ApiSteps {
                 .post("/Account/v1/Login");
     }
 
-    @Step("Очистка коллекции книг для пользователя с token {token} и userId {userId}")
+    @Step("Очистка коллекции книг для пользователя")
     public static void clearBookCollection(String token, String userId) {
         ApiSpecification.getBookStoreRequest(token, userId, "")
                 .when()
                 .delete("/BookStore/v1/Books");
     }
 
-    @Step("Добавление книги с ISBN {isbn} в коллекцию пользователя с token {token} и userId {userId}")
+    @Step("Добавление книги с ISBN {isbn} в коллекцию пользователя")
     public static void addBookToCollection(String token, String userId, String isbn) throws JsonProcessingException {
         BookRequest bookRequest = new BookRequest();
         bookRequest.setUserId(userId);
@@ -50,7 +50,7 @@ public class ApiSteps {
                 .post("/BookStore/v1/Books");
     }
 
-    @Step("Проверка профиля пользователя с token {token}")
+    @Step("Проверка профиля пользователя")
     public static Response checkProfile(String token) {
         return given()
                 .log().uri()
@@ -60,14 +60,14 @@ public class ApiSteps {
                 .get("/profile");
     }
 
-    @Step("Проверка, что книга с ISBN {isbn} отсутствует в профиле пользователя с token {token}")
+    @Step("Проверка, что книга с ISBN {isbn} отсутствует в профиле пользователя")
     public static void verifyBookNotInProfile(String token, String isbn) {
         checkProfile(token)
                 .then()
                 .body("books.isbn", not(hasItem(isbn)));
     }
 
-    @Step("Установка cookies и обновление страницы для пользователя с userId {userId}, expires {expires} и token {token}")
+    @Step("Установка cookies для пользователя с userId {userId}")
     public static void setCookiesAndRefresh(String userId, String expires, String token) {
         // Устанавливаем cookies
         getWebDriver().manage().addCookie(new Cookie("userID", userId));
