@@ -1,4 +1,4 @@
-package specifications;
+package spec;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Condition.*;

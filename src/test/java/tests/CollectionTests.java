@@ -1,81 +1,35 @@
 package tests;
-
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
-import static java.lang.String.format;
+import static api.ApiSteps.*;
+import static pages.PageObject.*;
+import static com.codeborne.selenide.Selenide.*;
+import utils.testData;
 
-import static com.codeborne.selenide.Selenide.open;
+public class CollectionTests extends TestBase {
 
-
-
-public class CollectionTests extends TestBase
-  {
     @Test
-    public void addBookToCollectionWithDeleteAllBookTests() {
-        String authData = "{\"userName\":\"user001\", \"password\":\"vzsGDGE5egq34rfqwdERGEefw4fq3EG!\"}";
-        Response authResponse = given()
-                .log().uri()
-                .log().method()
-                .log().body()
-                .contentType(JSON)
-                .body(authData)
-                .when()
-                .post("/Account/v1/Login")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .extract().response();
-        open("/favicon.ico");
+    public void addBookToCollectionWithDeleteAllBookTests2() throws Exception {
+        String userName = testData.USER_NAME;
+        String password = testData.PASSWORD;
+        String bookName = testData.BOOK_NAME;
+        String isbn = testData.ISBN;
 
-        given()
-                .log().uri()
-                .log().method()
-                .log().body()
-                .contentType(JSON)
-                .header("Authorization", "Bearer " + authResponse.path("token"))
-                .queryParams("UserId", authResponse.path("userId"))
-                .when()
-                .delete("/BookStore/v1/Books")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(204);
-
-
-
-
-        String isbn = "9781449365035";
-        String bookData = format("{\"userId\":\"%s\",\"collectionOfIsbns\":[{\"isbn\":\"%s\"}]}",
-                authResponse.path("userId") , isbn);
-
-        given()
-                .log().uri()
-                .log().method()
-                .log().body()
-                .contentType(JSON)
-                .header("Authorization", "Bearer " + authResponse.path("token"))
-                .body(bookData)
-                .when()
-                .post("/BookStore/v1/Books")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(201);
-
-
-        getWebDriver().manage().addCookie(new Cookie("userID", authResponse.path("userId")));
-        getWebDriver().manage().addCookie(new Cookie("expires", authResponse.path("expires")));
-        getWebDriver().manage().addCookie(new Cookie("token", authResponse.path("token")));
-
+        Response authResponse = authenticate(userName, password);
+        clearBookCollection(authResponse.path("token"), authResponse.path("userId"));
+        addBookToCollection(authResponse.path("token"), authResponse.path("userId"), isbn);
         open("/profile");
-        $(".ReactTable").shouldHave(text("Speaking JavaScript"));
+        setCookiesAndRefresh(
+                authResponse.path("userId"),
+                authResponse.path("expires"),
+                authResponse.path("token")
+        );
+        checkUserNameOnProfile(userName);
+        checkBookInCollection(bookName);
+        deleteBookFromCollection(bookName);
+        checkBookNotInCollection(bookName);
+        verifyBookNotInProfile(authResponse.path("token"), isbn);
     }
 }

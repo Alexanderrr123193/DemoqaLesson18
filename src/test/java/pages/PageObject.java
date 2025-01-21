@@ -1,4 +1,4 @@
-package api;
+package pages;
 
 import io.qameta.allure.Step;
 
@@ -6,10 +6,10 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class UiSteps {
+public class PageObject {
 
     @Step("Проверка, что имя пользователя {userName} отображается на странице профиля")
-    public static void checkUserNameOnProfile(String userName) {
+   public static void checkUserNameOnProfile(String userName) {
         $("#userName-value").shouldBe(visible).shouldHave(text(userName));
     }
 
