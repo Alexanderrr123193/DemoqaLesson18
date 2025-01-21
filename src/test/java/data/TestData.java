@@ -1,6 +1,6 @@
-package utils;
+package data;
 
-public class testData {
+public class TestData {
     public static final String USER_NAME = "user001";
     public static final String PASSWORD = "vzsGDGE5egq34rfqwdERGEefw4fq3EG!";
     public static final String BOOK_NAME = "Speaking JavaScript";
