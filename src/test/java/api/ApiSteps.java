@@ -69,7 +69,6 @@ public class ApiSteps {
 
     @Step("Установка cookies для пользователя с userId {userId}")
     public static void setCookiesAndRefresh(String userId, String expires, String token) {
-        // Устанавливаем cookies
         getWebDriver().manage().addCookie(new Cookie("userID", userId));
         getWebDriver().manage().addCookie(new Cookie("expires", expires));
         getWebDriver().manage().addCookie(new Cookie("token", token));

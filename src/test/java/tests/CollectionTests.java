@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class CollectionTests extends TestBase {
 
     @Test
-    public void addBookToCollectionWithDeleteAllBookTests2() throws Exception {
+    public void addBookToCollectionWithDeleteAllBookTests() throws Exception {
         String userName = data.TestData.USER_NAME;
         String password = data.TestData.PASSWORD;
         String bookName = data.TestData.BOOK_NAME;
