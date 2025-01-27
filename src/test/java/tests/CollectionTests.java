@@ -1,33 +1,30 @@
 package tests;
 import io.restassured.response.Response;
+import models.AddBookModel;
+import models.Isbn;
+import pages.PageObject;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import java.util.List;
 import static api.ApiSteps.*;
-import static pages.PageObject.*;
-import static com.codeborne.selenide.Selenide.*;
-
 public class CollectionTests extends TestBase {
 
+    @DisplayName("Удаление книги из списка")
     @Test
-    public void addBookToCollectionWithDeleteAllBookTests() throws Exception {
-        String userName = data.TestData.USER_NAME;
-        String password = data.TestData.PASSWORD;
-        String bookName = data.TestData.BOOK_NAME;
-        String isbn = data.TestData.ISBN;
-
-        Response authResponse = authenticate(userName, password);
-        clearBookCollection(authResponse.path("token"), authResponse.path("userId"));
-        addBookToCollection(authResponse.path("token"), authResponse.path("userId"), isbn);
-        open("/profile");
-        setCookiesAndRefresh(
-                authResponse.path("userId"),
-                authResponse.path("expires"),
-                authResponse.path("token")
-        );
-        checkUserNameOnProfile(userName);
-        checkBookInCollection(bookName);
-        deleteBookFromCollection(bookName);
-        checkBookNotInCollection(bookName);
-        verifyBookNotInProfile(authResponse.path("token"), isbn);
+    void deleteBookFromList() {
+        Response responseLogin = login(testData.bookStoreLogin, testData.bookStorePassword);
+        String token = responseLogin.path("token");
+        String userId = responseLogin.path("userId");
+        String expires = responseLogin.path("expires");
+        clearListOfUserBooks(token, userId);
+        Isbn isbn = new Isbn();
+        isbn.setIsbn(testData.isbn);
+        List<Isbn> listIsbns = List.of(isbn);
+        AddBookModel bookData = new AddBookModel(userId, listIsbns);
+        addBooks(token, bookData);
+        PageObject.openUserBooksPage(userId, expires, token);
+        PageObject.findBookByName(testData.bookName);
+        PageObject.deleteBookByName(testData.bookName);
+        PageObject.findNotBookByName(testData.bookName);
     }
 }

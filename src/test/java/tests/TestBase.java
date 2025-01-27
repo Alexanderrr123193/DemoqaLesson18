@@ -8,8 +8,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import java.util.Map;
-
+import io.github.cdimascio.dotenv.Dotenv;
 public class TestBase {
+    protected static final Dotenv dotenv = Dotenv.configure().load();
+    protected static final String bookStoreLogin = dotenv.get("bookStoreLogin");
+    protected static final String bookStorePassword = dotenv.get("bookStorePassword");
 
 
     @BeforeAll
@@ -30,7 +33,6 @@ public class TestBase {
         ));
         Configuration.browserCapabilities = capabilities;
     }
-
     @AfterEach
     void afterEach() {
         Attach.screenshotAs("Финальный скриншот");

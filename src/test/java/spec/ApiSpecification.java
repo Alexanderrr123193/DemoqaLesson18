@@ -1,23 +1,37 @@
-package specifications;
+package spec;
 
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import static io.restassured.RestAssured.given;
+import io.restassured.specification.ResponseSpecification;
+
+import static helpers.CustomAllureListener.withCustomTemplates;
+import static io.restassured.RestAssured.with;
+import static io.restassured.filter.log.LogDetail.BODY;
+import static io.restassured.filter.log.LogDetail.STATUS;
+import static io.restassured.http.ContentType.JSON;
 
 public class ApiSpecification {
 
-    public static RequestSpecification getAuthRequest(String authData) {
-        return given()
-                .log().all()
-                .contentType("application/json")
-                .body(authData);
-    }
+    public static RequestSpecification loginRequestSpecification = with()
+            .filter(withCustomTemplates())
+            .contentType(JSON)
+            .log().all();
 
-    public static RequestSpecification getBookStoreRequest(String token, String userId, String bookData) {
-        return given()
-                .log().all()
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + token)
-                .queryParams("UserId", userId)
-                .body(bookData);
-    }
+    public static ResponseSpecification loginResponseSpecification = new ResponseSpecBuilder()
+            .expectStatusCode(200)
+            .log(STATUS)
+            .log(BODY)
+            .build();
+
+    public static ResponseSpecification deleteBookResponseSpecification = new ResponseSpecBuilder()
+            .expectStatusCode(204)
+            .log(STATUS)
+            .log(BODY)
+            .build();
+
+    public static ResponseSpecification addBookResponseSpecification = new ResponseSpecBuilder()
+            .expectStatusCode(201)
+            .log(STATUS)
+            .log(BODY)
+            .build();
 }

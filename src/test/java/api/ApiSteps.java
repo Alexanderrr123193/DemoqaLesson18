@@ -1,77 +1,45 @@
 package api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.response.Response;
-import specifications.ApiSpecification;
-import models.AuthRequest;
-import models.BookRequest;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.hasItem;
-import org.openqa.selenium.Cookie;
-import static com.codeborne.selenide.Selenide.*;
-import java.util.List;
-import static io.restassured.RestAssured.given;
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
+import models.AddBookModel;
+import models.LoginRequestModel;
+
+import static io.restassured.RestAssured.given;
+import static spec.ApiSpecification.*;
 
 public class ApiSteps {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    @Step("Авторизация с использованием имени пользователя {userName}")
-    public static Response authenticate(String userName, String password) throws JsonProcessingException {
-        AuthRequest authRequest = new AuthRequest();
-        authRequest.setUserName(userName);
-        authRequest.setPassword(password);
-        String authRequestJson = objectMapper.writeValueAsString(authRequest);
-
-        return ApiSpecification.getAuthRequest(authRequestJson)
-                .when()
-                .post("/Account/v1/Login");
+    @Step("Авторизация в книжном магазине")
+    public static Response login(String userName, String password) {
+        LoginRequestModel authData = new LoginRequestModel(userName, password);
+        Response authResponse = given(loginRequestSpecification)
+                .body(authData)
+                .when().post("/Account/v1/Login")
+                .then().spec(loginResponseSpecification)
+                .extract().response();
+        return authResponse;
     }
 
-    @Step("Очистка коллекции книг для пользователя")
-    public static void clearBookCollection(String token, String userId) {
-        ApiSpecification.getBookStoreRequest(token, userId, "")
-                .when()
-                .delete("/BookStore/v1/Books");
-    }
 
-    @Step("Добавление книги с ISBN {isbn} в коллекцию пользователя")
-    public static void addBookToCollection(String token, String userId, String isbn) throws JsonProcessingException {
-        BookRequest bookRequest = new BookRequest();
-        bookRequest.setUserId(userId);
-        bookRequest.setCollectionOfIsbns(List.of(new BookRequest.Book(isbn)));
-        String bookRequestJson = objectMapper.writeValueAsString(bookRequest);
-
-        ApiSpecification.getBookStoreRequest(token, userId, bookRequestJson)
-                .when()
-                .post("/BookStore/v1/Books");
-    }
-
-    @Step("Проверка профиля пользователя")
-    public static Response checkProfile(String token) {
-        return given()
-                .log().uri()
-                .log().method()
+    @Step("Очистка коллекции книг пользователя")
+    public static Response clearListOfUserBooks(String token, String userId) {
+        Response deletionResponse = given(loginRequestSpecification)
                 .header("Authorization", "Bearer " + token)
+                .queryParams("UserId", userId)
+                .when().delete("/BookStore/v1/Books")
+                .then().spec(deleteBookResponseSpecification)
+                .extract().response();
+        return deletionResponse;
+    }
+
+    @Step("Добавление книги в коллекцию пользователя")
+    public static void addBooks(String token, AddBookModel bookData) {
+        given(loginRequestSpecification)
+                .header("Authorization", "Bearer " + token)
+                .body(bookData)
                 .when()
-                .get("/profile");
-    }
-
-    @Step("Проверка, что книга с ISBN {isbn} отсутствует в профиле пользователя")
-    public static void verifyBookNotInProfile(String token, String isbn) {
-        checkProfile(token)
+                .post("/BookStore/v1/Books")
                 .then()
-                .body("books.isbn", not(hasItem(isbn)));
-    }
-
-    @Step("Установка cookies для пользователя с userId {userId}")
-    public static void setCookiesAndRefresh(String userId, String expires, String token) {
-        getWebDriver().manage().addCookie(new Cookie("userID", userId));
-        getWebDriver().manage().addCookie(new Cookie("expires", expires));
-        getWebDriver().manage().addCookie(new Cookie("token", token));
-        refresh();
+                .spec(addBookResponseSpecification);
     }
 }

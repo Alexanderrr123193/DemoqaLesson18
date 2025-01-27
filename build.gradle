@@ -33,7 +33,8 @@ dependencies {
             "org.junit.jupiter:junit-jupiter:5.10.0",
             'org.assertj:assertj-core:3.24.2',
             'com.codeborne:selenide:7.6.1',
-            'org.slf4j:slf4j-simple:2.0.7'
+            'org.slf4j:slf4j-simple:2.0.7',
+            'io.github.cdimascio:java-dotenv:5.2.2'
     )
 }
 tasks.withType(Test) {

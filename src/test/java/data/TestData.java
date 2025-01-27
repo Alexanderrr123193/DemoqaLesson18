@@ -1,8 +1,10 @@
 package data;
 
 public class TestData {
-    public static final String USER_NAME = "user001";
-    public static final String PASSWORD = "vzsGDGE5egq34rfqwdERGEefw4fq3EG!";
-    public static final String BOOK_NAME = "Speaking JavaScript";
-    public static final String ISBN = "9781449365035";
+    public static final String picturePath = "Google_Test_passed.png";
+    public static final String bookStoreLogin = System.getProperty("bookStoreLogin");
+    public static final String bookStorePassword = System.getProperty("bookStorePassword");
+    public static final String isbn = "9781449365035";
+    public static final String bookName = "Speaking JavaScript";
+
 }
