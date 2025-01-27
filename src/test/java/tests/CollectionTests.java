@@ -7,24 +7,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static api.ApiSteps.*;
+import static data.TestData.*;
 public class CollectionTests extends TestBase {
-
-    @DisplayName("Удаление книги из списка")
+    String bookIsbn = "9781449365035";
+    @DisplayName("Удаление книги")
     @Test
     void deleteBookFromList() {
-        Response responseLogin = login(testData.bookStoreLogin, testData.bookStorePassword);
+        Response responseLogin = login(bookStoreLogin, bookStorePassword);
         String token = responseLogin.path("token");
         String userId = responseLogin.path("userId");
         String expires = responseLogin.path("expires");
         clearListOfUserBooks(token, userId);
-        Isbn isbn = new Isbn();
-        isbn.setIsbn(testData.isbn);
+        Isbn isbn = new Isbn(bookIsbn);
         List<Isbn> listIsbns = List.of(isbn);
         AddBookModel bookData = new AddBookModel(userId, listIsbns);
         addBooks(token, bookData);
-        PageObject.openUserBooksPage(userId, expires, token);
-        PageObject.findBookByName(testData.bookName);
-        PageObject.deleteBookByName(testData.bookName);
-        PageObject.findNotBookByName(testData.bookName);
+        PageObject pageObject = new PageObject();
+        pageObject.openUserBooksPage(userId, expires, token);
+        pageObject.findBookByName(bookName);
+        pageObject.deleteBookByName(bookName);
+        pageObject.findNotBookByName(bookName);
     }
 }
