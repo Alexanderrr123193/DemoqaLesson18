@@ -9,7 +9,7 @@ import java.util.List;
 import static api.ApiSteps.*;
 import static data.TestData.*;
 public class CollectionTests extends TestBase {
-    String bookIsbn = "9781449365035";
+    String bookIsbn = testBookIsbn;;
     @DisplayName("Удаление книги")
     @Test
     void deleteBookFromList() {
@@ -19,8 +19,8 @@ public class CollectionTests extends TestBase {
         String expires = responseLogin.path("expires");
         clearListOfUserBooks(token, userId);
         Isbn isbn = new Isbn(bookIsbn);
-        List<Isbn> listIsbns = List.of(isbn);
-        AddBookModel bookData = new AddBookModel(userId, listIsbns);
+        List<Isbn>listIsbn = List.of(isbn);
+        AddBookModel bookData = new AddBookModel(userId, listIsbn);
         addBooks(token, bookData);
         PageObject pageObject = new PageObject();
         pageObject.openUserBooksPage(userId, expires, token);
