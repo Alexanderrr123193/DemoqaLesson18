@@ -50,7 +50,7 @@ dependencies {
     }
     task simple_test(type: Test) {
         useJUnitPlatform {
-            includeTags("bookStore")
+            includeTags("simple_test")
         }
     }
 }
