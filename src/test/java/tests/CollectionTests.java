@@ -11,8 +11,6 @@ import static api.ApiSteps.*;
 import static data.TestData.*;
 public class CollectionTests extends TestBase {
     String bookIsbn = testBookIsbn;;
-    @DisplayName("Удаление книги")
-    @Tag("simple_test")
     @Test
     void deleteBookFromList() {
         Response responseLogin = login(bookStoreLogin, bookStorePassword);
