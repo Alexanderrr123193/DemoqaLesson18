@@ -2,6 +2,7 @@ package tests;
 import io.restassured.response.Response;
 import models.AddBookModel;
 import models.Isbn;
+import org.junit.jupiter.api.Tag;
 import pages.PageObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import static data.TestData.*;
 public class CollectionTests extends TestBase {
     String bookIsbn = testBookIsbn;;
     @DisplayName("Удаление книги")
+    @Tag("simple_test")
     @Test
     void deleteBookFromList() {
         Response responseLogin = login(bookStoreLogin, bookStorePassword);
