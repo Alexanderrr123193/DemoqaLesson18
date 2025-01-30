@@ -1,6 +1,8 @@
 package models;
 import lombok.Data;
+import lombok.Getter;
 
+@Getter
 @Data
 public class Isbn {
     private String isbn;
@@ -11,9 +13,6 @@ public class Isbn {
         this.isbn = isbn;
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }

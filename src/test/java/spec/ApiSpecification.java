@@ -6,8 +6,7 @@ import io.restassured.specification.ResponseSpecification;
 
 import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.restassured.RestAssured.with;
-import static io.restassured.filter.log.LogDetail.BODY;
-import static io.restassured.filter.log.LogDetail.STATUS;
+import static io.restassured.filter.log.LogDetail.ALL;
 import static io.restassured.http.ContentType.JSON;
 
 public class ApiSpecification {
@@ -19,19 +18,16 @@ public class ApiSpecification {
 
     public static ResponseSpecification loginResponseSpecification = new ResponseSpecBuilder()
             .expectStatusCode(200)
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .build();
 
     public static ResponseSpecification deleteBookResponseSpecification = new ResponseSpecBuilder()
             .expectStatusCode(204)
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .build();
 
     public static ResponseSpecification addBookResponseSpecification = new ResponseSpecBuilder()
             .expectStatusCode(201)
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .build();
 }

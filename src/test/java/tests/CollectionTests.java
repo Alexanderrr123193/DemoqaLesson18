@@ -2,7 +2,7 @@ package tests;
 import io.restassured.response.Response;
 import models.AddBookModel;
 import models.Isbn;
-import pages.PageObject;
+import pages.BookStorePage;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static api.ApiSteps.*;
@@ -20,7 +20,7 @@ public class CollectionTests extends TestBase {
         List<Isbn>listIsbn = List.of(isbn);
         AddBookModel bookData = new AddBookModel(userId, listIsbn);
         addBooks(token, bookData);
-        PageObject pageObject = new PageObject();
+        BookStorePage pageObject = new BookStorePage();
         pageObject.openUserBooksPage(userId, expires, token);
         pageObject.findBookByName(bookName);
         pageObject.deleteBookByName(bookName);

@@ -7,14 +7,14 @@ import org.openqa.selenium.Cookie;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
-public class PageObject {
+public class BookStorePage {
     private final SelenideElement tableWithUserBooks = $(".ReactTable"),
             searchField = $("#searchBox"),
             deleteIcon = $("#delete-record-undefined"),
             modalOkButton = $("#closeSmallModal-ok");
 
     @Step("Открыть список добавленных книг пользователя")
-    public PageObject openUserBooksPage(String userId, String expires, String token) {
+    public BookStorePage openUserBooksPage(String userId, String expires, String token) {
         open("/favicon.ico");
         getWebDriver().manage().addCookie(new Cookie("userID", userId));
         getWebDriver().manage().addCookie(new Cookie("expires", expires));
@@ -25,14 +25,14 @@ public class PageObject {
     }
 
     @Step("Проверка, что книга с названием {bookName} отображается в коллекции")
-    public PageObject findBookByName(String bookName) {
+    public BookStorePage findBookByName(String bookName) {
         tableWithUserBooks.shouldHave(text(bookName));
 
         return this;
     }
 
     @Step("Удаление книги с названием {bookName} из коллекции")
-    public PageObject deleteBookByName(String bookName) {
+    public BookStorePage deleteBookByName(String bookName) {
         searchField.setValue(bookName);
         deleteIcon.click();
         modalOkButton.click();
@@ -40,7 +40,7 @@ public class PageObject {
         return this;
     }
     @Step("Проверка, что книга с названием {bookName} отсутствует в коллекции")
-    public PageObject findNotBookByName(String bookName) {
+    public BookStorePage findNotBookByName(String bookName) {
         tableWithUserBooks.shouldNotHave(text(bookName));
 
         return this;
