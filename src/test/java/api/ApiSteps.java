@@ -19,10 +19,8 @@ public class ApiSteps {
                 .extract().response();
         return authResponse;
     }
-
-
     @Step("Очистка коллекции книг пользователя")
-    public static Response clearListOfUserBooks(String token, String userId) {
+    public Response clearListOfUserBooks(String token, String userId) {
         Response deletionResponse = given(loginRequestSpecification)
                 .header("Authorization", "Bearer " + token)
                 .queryParams("UserId", userId)
@@ -33,7 +31,7 @@ public class ApiSteps {
     }
 
     @Step("Добавление книги в коллекцию пользователя")
-    public static void addBooks(String token, AddBookModel bookData) {
+    public void addBooks(String token, AddBookModel bookData) {
         given(loginRequestSpecification)
                 .header("Authorization", "Bearer " + token)
                 .body(bookData)
