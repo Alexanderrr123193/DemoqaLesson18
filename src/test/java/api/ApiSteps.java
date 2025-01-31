@@ -1,13 +1,10 @@
 package api;
-
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import models.AddBookModel;
 import models.LoginRequestModel;
-
 import static io.restassured.RestAssured.given;
 import static spec.ApiSpecification.*;
-
 public class ApiSteps {
     @Step("Авторизация в книжном магазине")
     public static Response login(String userName, String password) {
@@ -19,10 +16,8 @@ public class ApiSteps {
                 .extract().response();
         return authResponse;
     }
-
-
     @Step("Очистка коллекции книг пользователя")
-    public static Response clearListOfUserBooks(String token, String userId) {
+    public Response clearListOfUserBooks(String token, String userId) {
         Response deletionResponse = given(loginRequestSpecification)
                 .header("Authorization", "Bearer " + token)
                 .queryParams("UserId", userId)
@@ -31,9 +26,8 @@ public class ApiSteps {
                 .extract().response();
         return deletionResponse;
     }
-
     @Step("Добавление книги в коллекцию пользователя")
-    public static void addBooks(String token, AddBookModel bookData) {
+    public void addBooks(String token, AddBookModel bookData) {
         given(loginRequestSpecification)
                 .header("Authorization", "Bearer " + token)
                 .body(bookData)
